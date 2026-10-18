@@ -1,0 +1,38 @@
+services:
+  web:
+    image: php:8.2-apache
+    container_name: projet_web
+    ports:
+      - "8079:80"
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    container_name: spendly
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: projet_bdd
+      MYSQL_USER: projet_user
+      MYSQL_PASSWORD: projet_pass
+    ports:
+      - "3308:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: spendly_phpmyadmin
+    ports:
+      - "8078:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+    depends_on:
+      - db
+
+volumes:
+  db_data:
