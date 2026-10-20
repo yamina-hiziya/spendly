@@ -1,3 +1,17 @@
+<?php
+require_once 'libs/config.php';
+require_once 'libs/pdo.php';
+
+session_start();
+var_dump($_SESSION);
+
+$mainMenu = [
+    'index.php' => 'Accueil',
+    'propos.php' => 'À propos'
+];
+
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -17,13 +31,11 @@
                     <img src="/assets/images/spendly.svg" alt="Logo spendly" width="150">
                 </a></div>
             <ul class="nav col-12 col-md-auto mb-2 mb-md-0 justify-content-center">
-                <li><a href="#" class="nav-link px-2 active">Home</a></li>
-                <li><a href="#" class="nav-link px-2">Features</a></li>
-                <li><a href="#" class="nav-link px-2">Pricing</a></li>
-                <li><a href="#" class="nav-link px-2">FAQs</a></li>
-                <li><a href="#" class="nav-link px-2">About</a></li>
+                <?php foreach ($mainMenu as $page => $title) : ?>
+                    <li><a href="<?= $page ?>" class="nav-link px-2 link-secondary"><?= $title ?></a></li>
+                <?php endforeach ?>
             </ul>
-            <div class="col-md-3 text-end"><button type="button" class="btn btn-outline-primary me-2">Login</button><button type="button" class="btn btn-primary">Sign up</button></div>
+            <div class="col-md-3 text-end"><a href="connexion.php" class="btn btn-outline-primary me-2">Connexion</a><a href="inscription.php" class="btn btn-primary">Inscription</a></div>
         </header>
     </div>
     <main>
