@@ -1,50 +1,84 @@
 <?php
+// on démarre la session avant tout affichage pour pouvoir rediriger
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 require_once 'libs/pdo.php';
 require_once 'libs/user.php';
-require_once 'templates/header.php';
+require_once 'libs/security.php';
 
 $errors = [];
+
 if (isset($_POST['email']) && isset($_POST['password'])) {
-    if (empty($_POST['email'])) {
-        $errors[] = 'Email est requis';
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+
+    // on vérifie que le formulaire vient bien de notre site
+    if (!checkCsrfToken($_POST['csrf_token'] ?? null)) {
+        $errors[] = 'Le formulaire a expiré, merci de réessayer';
     }
-    if (empty($_POST['password'])) {
-        $errors[] = 'Password est requis';
+
+    if ($email === '') {
+        $errors[] = "L'email est obligatoire";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors[] = "L'email n'est pas valide";
     }
+
+    if (mb_strlen($password) < 8) {
+        $errors[] = 'Le mot de passe doit contenir au moins 8 caractères';
+    }
+
     if (count($errors) === 0) {
-        $res = addUser($pdo, $_POST['email'], $_POST['password']);
-        if ($res) {
-            header('Location: connexion.php');
-        } else {
-            $errors[] = 'Une erreur s\'est produite lors de votre inscription';
+        try {
+            addUser($pdo, $email, $password);
+
+            header('Location: connexion.php?registered=1');
+            exit;
+        } catch (PDOException $e) {
+            // 1062 = doublon : l'email est unique dans la table user
+            if ($e->errorInfo[1] === 1062) {
+                $errors[] = 'Cet email est déjà utilisé';
+            } else {
+                // on garde le détail dans les logs, pas à l'écran
+                error_log('[Spendly] ' . $e->getMessage());
+                $errors[] = "Une erreur s'est produite lors de votre inscription";
+            }
         }
     }
 }
-?>
 
+// le header affiche du HTML, il vient seulement maintenant
+require_once 'templates/header.php';
+?>
 
 <div class="container col-xxl-8 px-4 py-5">
     <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
         <h1>Inscription</h1>
 
-        <?php foreach ($errors as $error) : ?>
+        <?php foreach ($errors as $error): ?>
             <div class="alert alert-danger">
-                <?= $error ?>
+                <?= e($error) ?>
             </div>
-        <?php endforeach ?>
+        <?php endforeach; ?>
 
         <form action="" method="post">
+            <input type="hidden" name="csrf_token" value="<?= e(getCsrfToken()) ?>">
+
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="text" id="email" name="email" class="form-control">
+                <input type="email" id="email" name="email" class="form-control" required value="<?= e($_POST['email'] ?? '') ?>">
             </div>
             <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" id="password" name="password" class="form-control">
+                <label for="password" class="form-label">Mot de passe</label>
+                <input type="password" id="password" name="password" class="form-control" required minlength="8">
+                <div class="form-text">8 caractères minimum</div>
             </div>
             <input type="submit" value="S'inscrire" class="btn btn-primary">
         </form>
+
+        <p class="mt-3">Déjà un compte ? <a href="connexion.php">Connectez-vous</a></p>
     </div>
 </div>
-<?php
-require_once 'templates/footer.php'; ?>
+
+<?php require_once 'templates/footer.php'; ?>
