@@ -1,56 +1,55 @@
 <?php
-session_start();
+// on démarre la session avant tout affichage pour pouvoir rediriger
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 require_once 'libs/pdo.php';
 require_once 'libs/user.php';
+require_once 'libs/security.php';
+
+// si on est déjà connecté, on va directement aux dépenses
+if (isset($_SESSION['user'])) {
+    header('Location: depenses.php');
+    exit;
+}
 
 $errors = [];
+
 if (isset($_POST['email']) && isset($_POST['password'])) {
-    if (empty($_POST['email'])) {
-        $errors[] = 'Email est requis';
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+
+    // on vérifie que le formulaire vient bien de notre site
+    if (!checkCsrfToken($_POST['csrf_token'] ?? null)) {
+        $errors[] = 'Le formulaire a expiré, merci de réessayer';
     }
-    if (empty($_POST['password'])) {
-        $errors[] = 'Password est requis';
+    if ($email === '') {
+        $errors[] = "L'email est obligatoire";
     }
+    if ($password === '') {
+        $errors[] = 'Le mot de passe est obligatoire';
+    }
+
     if (count($errors) === 0) {
-        $user = verifyUserLogin($pdo, $_POST['email'], $_POST['password']);
+        $user = verifyUserLogin($pdo, $email, $password);
+
         if ($user) {
-            //on veut le connecter avec une session
+            // on change l'id de session à la connexion (contre le vol de session)
             session_regenerate_id(true);
-            $_SESSION["user"] = ["id_user" => $user["id_user"], "email" => $user["email"]];
-            header('location: index.php');
+            $_SESSION['user'] = ['id_user' => $user['id_user'], 'email' => $user['email']];
+
+            header('Location: depenses.php');
             exit;
         } else {
-            //on va généré une erreur
+            // même message si l'email n'existe pas ou si le mot de passe est faux :
+            // on ne donne pas d'indice sur les comptes existants
             $errors[] = 'Email ou mot de passe incorrect';
         }
     }
 }
+
+// affichage : header, vue de la page, footer
 require_once 'templates/header.php';
-?>
-
-
-<div class="container col-xxl-8 px-4 py-5">
-    <div class="row flex-lg-row-reverse align-items-center g-5 ">
-        <h1>Connexion</h1>
-
-        <?php foreach ($errors as $error) : ?>
-            <div class="alert alert-danger">
-                <?= $error ?>
-            </div>
-        <?php endforeach ?>
-
-        <form action="" method="post">
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="text" id="email" name="email" class="form-control">
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" id="password" name="password" class="form-control">
-            </div>
-            <input type="submit" value="Se connecter" class="btn btn-primary">
-        </form>
-    </div>
-</div>
-<?php
-require_once 'templates/footer.php'; ?>
+require_once 'templates/pages/connexion.php';
+require_once 'templates/footer.php';
