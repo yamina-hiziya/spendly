@@ -1,5 +1,6 @@
 <?php
 
+//Enregistre un nouvel utilisateur dans la base de données avec hachage du mot de passe.
 function addUser(PDO $pdo, string $email, string $password): bool
 {
     // on prepare la requête sql pour inséré un utilisateur en base de donnée
@@ -16,6 +17,7 @@ function addUser(PDO $pdo, string $email, string $password): bool
     return $query->execute();
 }
 
+// verifie les identifiants de connexion d'un utilisateur
 function verifyUserLogin(PDO $pdo, string $email, string $password): bool|array
 {
     $query = $pdo->prepare("SELECT id_user, email, password FROM user WHERE email = :email");

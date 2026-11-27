@@ -1,6 +1,6 @@
 <?php
-require_once 'libs/config.php';
-require_once 'libs/pdo.php';
+require_once __DIR__ . '/../libs/config.php';
+require_once __DIR__ . '/../libs/pdo.php';
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();

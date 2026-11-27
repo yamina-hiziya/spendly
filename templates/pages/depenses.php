@@ -1,3 +1,16 @@
+<?php
+
+/**
+ * Vue de la page Mes Dépenses
+ * variables envoyées par depenses.php :
+ * @var array $errors
+ * @var array $categories
+ * @var int|null $categoryId
+ * @var array $expenses
+ * @var float $expenseTotal
+ * @var bool $showModalAddExpense
+ */
+?>
 <div class="container col-xxl-8 px-4 py-5">
     <h1 class="mb-3">Mes Dépenses</h1>
 

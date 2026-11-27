@@ -56,7 +56,6 @@ function getExpenseTotal(PDO $pdo, int $userId, ?int $categoryId = null): float
         $total = (float) $result["total"];
     }
     return $total;
-    $query->fetch(PDO::FETCH_ASSOC);
 }
 
 function saveExpense(PDO $pdo, string $title, float $amount, string $expenseDate, int $idCategory, int $idUser): bool

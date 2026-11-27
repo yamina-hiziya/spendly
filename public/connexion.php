@@ -4,9 +4,9 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-require_once 'libs/pdo.php';
-require_once 'libs/user.php';
-require_once 'libs/security.php';
+require_once __DIR__ . '/../libs/pdo.php';
+require_once __DIR__ . '/../libs/user.php';
+require_once __DIR__ . '/../libs/security.php';
 
 // si on est déjà connecté, on va directement aux dépenses
 if (isset($_SESSION['user'])) {
@@ -50,6 +50,6 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
 }
 
 // affichage : header, vue de la page, footer
-require_once 'templates/header.php';
-require_once 'templates/pages/connexion.php';
-require_once 'templates/footer.php';
+require_once __DIR__ . '/../templates/header.php';
+require_once __DIR__ . '/../templates/pages/connexion.php';
+require_once __DIR__ . '/../templates/footer.php';

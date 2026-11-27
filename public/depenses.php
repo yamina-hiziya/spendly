@@ -4,10 +4,10 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-require_once 'libs/pdo.php';
-require_once 'libs/expense.php';
-require_once 'libs/category.php';
-require_once 'libs/security.php';
+require_once __DIR__ . '/../libs/pdo.php';
+require_once __DIR__ . '/../libs/expense.php';
+require_once __DIR__ . '/../libs/category.php';
+require_once __DIR__ . '/../libs/security.php';
 
 // page réservée aux utilisateurs connectés
 if (!isset($_SESSION['user'])) {
@@ -87,6 +87,6 @@ $expenses = getExpenses($pdo, $idUser, $categoryId);
 $expenseTotal = getExpenseTotal($pdo, $idUser, $categoryId);
 
 // affichage : header, vue de la page, footer
-require_once 'templates/header.php';
-require_once 'templates/pages/depenses.php';
-require_once 'templates/footer.php';
+require_once __DIR__ . '/../templates/header.php';
+require_once __DIR__ . '/../templates/pages/depenses.php';
+require_once __DIR__ . '/../templates/footer.php';
