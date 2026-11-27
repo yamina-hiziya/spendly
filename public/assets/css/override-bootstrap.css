@@ -4,6 +4,7 @@
     --spendly-primary-dark: #013E44;
     --spendly-blue: #046A89;
     --spendly-gold: #C99832;
+    --spendly-gold-dark: #A07725;
     --spendly-gold-light: #F6EEDC;
     --spendly-light: #EEF4F5;
 
@@ -15,9 +16,43 @@
     --bs-link-hover-color-rgb: 1, 83, 91;
 }
 
-/* titres */
-h1, h2, h3 {
+/* fond général légèrement teinté : moins de blanc pur */
+body {
+    background-color: #FAFBFB;
+}
+
+/* une seule couleur pour tous les titres */
+h1, h2, h3, h4, h5, .display-5, .display-6 {
+    color: var(--spendly-primary) !important;
+}
+
+/* petit trait doré sous les titres de section centrés */
+main h2.text-center::after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 4px;
+    margin: 0.75rem auto 0;
+    border-radius: 2px;
+    background-color: var(--spendly-gold);
+}
+
+/* header : nom du site, liens et trait doré en bas */
+.brand-name {
     color: var(--spendly-primary);
+}
+
+header.border-bottom {
+    border-bottom: 3px solid var(--spendly-gold) !important;
+}
+
+.nav-link.link-secondary {
+    color: var(--spendly-primary) !important;
+    font-weight: 500;
+}
+
+.nav-link.link-secondary:hover {
+    color: var(--spendly-gold-dark) !important;
 }
 
 /* boutons */
@@ -50,24 +85,20 @@ h1, h2, h3 {
     --bs-btn-color: #2B2100;
     --bs-btn-bg: var(--spendly-gold);
     --bs-btn-border-color: var(--spendly-gold);
-    --bs-btn-hover-color: #2B2100;
-    --bs-btn-hover-bg: #B5862A;
-    --bs-btn-hover-border-color: #B5862A;
-    --bs-btn-active-color: #2B2100;
-    --bs-btn-active-bg: #A07725;
-    --bs-btn-active-border-color: #A07725;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: var(--spendly-gold-dark);
+    --bs-btn-hover-border-color: var(--spendly-gold-dark);
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: var(--spendly-gold-dark);
+    --bs-btn-active-border-color: var(--spendly-gold-dark);
     --bs-btn-focus-shadow-rgb: 201, 152, 50;
+    font-weight: 600;
 }
 
-/* en-tête du tableau des dépenses aux couleurs du site */
+/* tableau des dépenses aux couleurs du site */
 .table-dark {
     --bs-table-bg: var(--spendly-primary);
     --bs-table-border-color: var(--spendly-primary-dark);
-}
-
-/* liens du menu */
-.nav-link.link-secondary:hover {
-    color: var(--spendly-primary) !important;
 }
 
 /* fonds de section */
@@ -75,11 +106,20 @@ h1, h2, h3 {
     background-color: var(--spendly-light);
 }
 
+.bg-spendly-gold-light {
+    background-color: var(--spendly-gold-light);
+}
+
 .bg-spendly-primary {
     background-color: var(--spendly-primary);
 }
 
-/* pastille ronde des icônes et des étapes */
+/* le titre reste blanc sur le bandeau bleu */
+.bg-spendly-primary h2 {
+    color: #fff !important;
+}
+
+/* pastille ronde des icônes */
 .feature-icon {
     width: 3.5rem;
     height: 3.5rem;
@@ -88,27 +128,46 @@ h1, h2, h3 {
     align-items: center;
     justify-content: center;
     font-size: 1.6rem;
-    background-color: var(--spendly-light);
-    color: var(--spendly-primary);
+    background-color: var(--spendly-gold-light);
+    color: var(--spendly-gold-dark);
 }
 
+/* numéros des étapes */
 .step-number {
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 3rem;
+    height: 3rem;
     border-radius: 50%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    font-size: 1.25rem;
     font-weight: 700;
     background-color: var(--spendly-gold);
     color: #2B2100;
 }
 
-/* cartes */
+/* cartes : ombre douce et bordure dorée en haut */
 .card-spendly {
     border: 0;
+    border-top: 4px solid var(--spendly-gold);
     border-radius: 1rem;
-    box-shadow: 0 0.25rem 1rem rgba(1, 83, 91, 0.08);
+    background-color: #fff;
+    box-shadow: 0 0.25rem 1rem rgba(1, 83, 91, 0.10);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-spendly:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0.5rem 1.5rem rgba(1, 83, 91, 0.16);
+}
+
+/* pied de page */
+footer .nav-link {
+    color: var(--spendly-primary) !important;
+}
+
+footer .nav-link:hover {
+    color: var(--spendly-gold-dark) !important;
 }
 
 /* contour visible au clavier (accessibilité) */
@@ -116,4 +175,15 @@ a:focus-visible,
 .btn:focus-visible {
     outline: 3px solid var(--spendly-gold);
     outline-offset: 2px;
+}
+
+/* on respecte les personnes qui désactivent les animations */
+@media (prefers-reduced-motion: reduce) {
+    .card-spendly {
+        transition: none;
+    }
+
+    .card-spendly:hover {
+        transform: none;
+    }
 }

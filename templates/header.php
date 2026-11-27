@@ -28,7 +28,7 @@ if (isset($_SESSION['user'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" integrity="sha384-XGjxtQfXaH2tnPFa9x+ruJTuLE3Aa6LhHSWRr1XeTyhezb4abCG4ccI5AkVDxqC+" crossorigin="anonymous">
     <link rel="icon" type="image/svg+xml" href="/assets/images/spendly-icon.svg">
-    <link rel="stylesheet" href="/assets/css/override-bootstrap.css?v=2">
+    <link rel="stylesheet" href="/assets/css/override-bootstrap.css?v=3">
 </head>
 
 <body>
@@ -51,7 +51,7 @@ if (isset($_SESSION['user'])) {
             <div class="col-md-3 text-end">
                 <?php if (isset($_SESSION['user'])): ?>
                     <div class="d-flex flex-column align-items-center">
-                        <p>Connecté en tant que <?= e($_SESSION['user']['email']) ?></p>
+                        <p class="small text-body-secondary mb-1">Connecté : <?= e($_SESSION['user']['email']) ?></p>
                         <!-- on se déconnecte avec un formulaire POST + jeton CSRF, pas avec un simple lien -->
                         <form action="deconnexion.php" method="post">
                             <input type="hidden" name="csrf_token" value="<?= e(getCsrfToken()) ?>">

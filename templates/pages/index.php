@@ -61,7 +61,7 @@ $isLogged = isset($_SESSION['user']);
 </section>
 
 <!-- comment ça marche -->
-<section class="bg-spendly-light py-5 mb-5">
+<section class="bg-spendly-gold-light py-5 mb-5">
     <div class="container col-xxl-8 px-4">
         <h2 class="text-center fw-bold mb-4">Comment ça marche ?</h2>
         <div class="row g-4 text-center">
