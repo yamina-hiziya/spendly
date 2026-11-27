@@ -18,6 +18,14 @@
         <div class="alert alert-success">La dépense a bien été ajoutée</div>
     <?php endif; ?>
 
+    <?php if (isset($_GET['deleted'])): ?>
+        <div class="alert alert-success">La dépense a bien été supprimée</div>
+    <?php endif; ?>
+
+    <?php if (isset($_GET['error'])): ?>
+        <div class="alert alert-danger">Cette action n'a pas pu être effectuée</div>
+    <?php endif; ?>
+
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#expenseModal">
         Ajouter une dépense
     </button>
@@ -96,51 +104,62 @@
     </div>
     <!-- fin modal -->
 
-    <form method="get">
-        <table class="table mt-4">
-            <thead>
-                <tr class="table-dark">
-                    <th scope="col">Titre</th>
-                    <th scope="col">Montant</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">
-                        <select onchange="this.form.submit()" name="category" id="filter_category" class="form-control form-select" aria-label="Filtrer par catégorie">
-                            <option value="">-- Catégorie --</option>
-                            <?php foreach ($categories as $category): ?>
-                                <option value="<?= (int)$category['id_category'] ?>" <?= ($categoryId === (int)$category['id_category']) ? 'selected' : '' ?>>
-                                    <?= e($category['name']) ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if ($expenses): ?>
-                    <?php foreach ($expenses as $expense): ?>
-                        <tr>
-                            <td><?= e($expense['title']) ?></td>
-                            <td><?= e(formatPrice($expense['amount'])) ?></td>
-                            <td><?= e(date('d/m/Y', strtotime($expense['expense_date']))) ?></td>
-                            <td><?= e($expense['category_name']) ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
+    <form method="get" id="filterForm"></form>
+    <table class="table mt-4">
+        <thead>
+            <tr class="table-dark">
+                <th scope="col">Titre</th>
+                <th scope="col">Montant</th>
+                <th scope="col">Date</th>
+                <th scope="col">
+                    <select onchange="this.form.submit()" name="category" id="filter_category" class="form-control form-select" aria-label="Filtrer par catégorie" form="filterForm">
+                        <option value="">-- Catégorie --</option>
+                        <?php foreach ($categories as $category): ?>
+                            <option value="<?= (int)$category['id_category'] ?>" <?= ($categoryId === (int)$category['id_category']) ? 'selected' : '' ?>>
+                                <?= e($category['name']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </th>
+                <th scope="col" class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if ($expenses): ?>
+                <?php foreach ($expenses as $expense): ?>
                     <tr>
-                        <td colspan="4" class="text-center">Aucune dépense</td>
+                        <td><?= e($expense['title']) ?></td>
+                        <td><?= e(formatPrice($expense['amount'])) ?></td>
+                        <td><?= e(date('d/m/Y', strtotime($expense['expense_date']))) ?></td>
+                        <td><?= e($expense['category_name']) ?></td>
+                        <td class="text-end">
+                            <!-- formulaire séparé, en POST avec jeton CSRF -->
+                            <form action="depenses.php" method="post" class="d-inline" onsubmit="return confirm('Supprimer cette dépense ?');">
+                                <input type="hidden" name="csrf_token" value="<?= e(getCsrfToken()) ?>">
+                                <input type="hidden" name="id_expense" value="<?= (int)$expense['id_expense'] ?>">
+                                <button type="submit" name="deleteExpense" class="btn btn-sm btn-outline-danger" aria-label="Supprimer <?= e($expense['title']) ?>">
+                                    <i class="bi bi-trash" aria-hidden="true"></i>
+                                </button>
+                            </form>
+                        </td>
                     </tr>
-                <?php endif; ?>
-            </tbody>
-            <tfoot>
-                <tr class="table-dark">
-                    <th>Total</th>
-                    <th><?= e(formatPrice($expenseTotal)) ?></th>
-                    <th></th>
-                    <th></th>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="5" class="text-center">Aucune dépense</td>
                 </tr>
-            </tfoot>
-        </table>
-    </form>
+            <?php endif; ?>
+        </tbody>
+        <tfoot>
+            <tr class="table-dark">
+                <th>Total</th>
+                <th><?= e(formatPrice($expenseTotal)) ?></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+    </table>
 </div>
 
 <script>

@@ -76,3 +76,19 @@ function formatPrice(float|int $price, string $currency = '€', $decimal = 2): 
     $formattedPrice = number_format($price, 2);
     return "$formattedPrice €";
 }
+
+/**
+ * Supprime une dépense, seulement si elle appartient à l'utilisateur.
+ * Renvoie true si une ligne a été supprimée.
+ */
+function deleteExpense(PDO $pdo, int $idExpense, int $idUser): bool
+{
+    // on vérifie l'id de la dépense ET l'id de l'utilisateur :
+    // impossible de supprimer la dépense de quelqu'un d'autre en changeant l'id
+    $query = $pdo->prepare("DELETE FROM expense WHERE id_expense = :id_expense AND id_user = :id_user");
+    $query->bindValue(':id_expense', $idExpense, PDO::PARAM_INT);
+    $query->bindValue(':id_user', $idUser, PDO::PARAM_INT);
+    $query->execute();
+
+    return $query->rowCount() > 0;
+}

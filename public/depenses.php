@@ -24,6 +24,24 @@ $categoryIds = array_column($categories, 'id_category');
 $showModalAddExpense = false;
 $errors = [];
 
+// suppression d'une dépense
+if (isset($_POST['deleteExpense'])) {
+    if (!checkCsrfToken($_POST['csrf_token'] ?? null)) {
+        header('Location: depenses.php?error=1');
+        exit;
+    }
+
+    $idExpense = (int)($_POST['id_expense'] ?? 0);
+
+    // deleteExpense vérifie aussi que la dépense appartient bien à l'utilisateur connecté
+    if (deleteExpense($pdo, $idExpense, $idUser)) {
+        header('Location: depenses.php?deleted=1');
+    } else {
+        header('Location: depenses.php?error=1');
+    }
+    exit;
+}
+
 if (isset($_POST['saveExpense'])) {
     $title = trim($_POST['title'] ?? '');
     $amount = (float)($_POST['amount'] ?? 0);
