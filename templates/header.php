@@ -26,7 +26,9 @@ if (isset($_SESSION['user'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spendly</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="/assets/css/override-bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" integrity="sha384-XGjxtQfXaH2tnPFa9x+ruJTuLE3Aa6LhHSWRr1XeTyhezb4abCG4ccI5AkVDxqC+" crossorigin="anonymous">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/spendly-icon.svg">
+    <link rel="stylesheet" href="/assets/css/override-bootstrap.css?v=2">
 </head>
 
 <body>
@@ -35,7 +37,8 @@ if (isset($_SESSION['user'])) {
         <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
             <div class="col-md-3 mb-2 mb-md-0">
                 <a href="/" class="d-inline-flex text-decoration-none">
-                    <img src="/assets/images/spendly.svg" alt="Spendly - accueil" width="150">
+                    <img src="/assets/images/spendly-icon.svg" alt="" width="44" height="44">
+                    <span class="fs-3 fw-bold ms-2 align-self-center" style="color: var(--spendly-primary);">Spendly</span>
                 </a>
             </div>
 
@@ -52,7 +55,7 @@ if (isset($_SESSION['user'])) {
                         <!-- on se déconnecte avec un formulaire POST + jeton CSRF, pas avec un simple lien -->
                         <form action="deconnexion.php" method="post">
                             <input type="hidden" name="csrf_token" value="<?= e(getCsrfToken()) ?>">
-                            <button type="submit" class="btn btn-outline-primary me-2">Déconnexion</button>
+                            <button type="submit" class="btn btn-outline-primary btn-sm">Déconnexion</button>
                         </form>
                     </div>
                 <?php else: ?>
